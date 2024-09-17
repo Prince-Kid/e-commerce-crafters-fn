@@ -4,12 +4,15 @@ import { fetchPopularProducts } from "../../Redux/features/PopularProductsSlice"
 import { RootState, AppDispatch } from "../../Redux/store";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 const PopularProducts: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { products, loading, error } = useSelector(
     (state: RootState) => state.popularProducts
   );
+  const product = useSelector((state: any) => state.product.product);
+  const [quantity, setQuantity] = useState<number>(1);
   const navigate = useNavigate();
   const { t } = useTranslation();
   useEffect(() => {
@@ -19,27 +22,25 @@ const PopularProducts: React.FC = () => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-10">
-      {Array.from({length: 4}).map((product) => (
-        <div
-          className=" cursor-pointer rounded-t-[12px]"
-        >
-         <Skeleton className="h-[30vh]"/>
-          <div className="flex flex-col p-2">
-            <p className="md:text-lg sm:text-sm text-gray-500">
-             <Skeleton height={14} />
-            </p>
-            <h3 className="md:text-xl sm:text-lg text-secondary">
-            <Skeleton height={14} />
-            </h3>
-            <div className="flex justify-between items-center mt-2">
-              <p className="md:text-xl sm:text-lg font-semibold text-gray-900">
-              <Skeleton height={14} />
+        {Array.from({ length: 4 }).map((product) => (
+          <div className=" cursor-pointer rounded-t-[12px]">
+            <Skeleton className="h-[30vh]" />
+            <div className="flex flex-col p-2">
+              <p className="md:text-lg sm:text-sm text-gray-500">
+                <Skeleton height={14} />
               </p>
+              <h3 className="md:text-xl sm:text-lg text-secondary">
+                <Skeleton height={14} />
+              </h3>
+              <div className="flex justify-between items-center mt-2">
+                <p className="md:text-xl sm:text-lg font-semibold text-gray-900">
+                  <Skeleton height={14} />
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
     );
   }
 
@@ -67,13 +68,16 @@ const PopularProducts: React.FC = () => {
         {displayProducts.map((product) => (
           <div
             key={product.productId}
-            className=" cursor-pointer rounded-t-[12px] w-full "
+            className=" cursor-pointer rounded-t-[12px]  shadow-lg p-5"
             onClick={() => handleCardClick(product.productId)}
           >
+            <span className="text-base text-center text-[#D21A0E] font-bold tracking-[-0.30px] w-auto">
+              {product.discount ? `${product.discount}% OFF` : null}
+            </span>
             <img
               src={product.image[0]}
               alt={product.name}
-              className=" rounded-t-[12px] w-full h-[30vh] "
+              className=" rounded-t-[12px] w-full h-[30vh] object-contain"
             />
             <div className="flex flex-col p-2">
               <p className="md:text-lg sm:text-sm text-gray-500">
@@ -84,7 +88,17 @@ const PopularProducts: React.FC = () => {
               </h3>
               <div className="flex justify-between items-center mt-2">
                 <p className="md:text-xl sm:text-lg font-semibold text-blackText">
-                  {product.price} Rwf
+                  <span className="text-base text-[#AFBACA] line-through tracking-[-0.30px] w-auto">
+                    {product.discount ? `${product.price * quantity}` : null}
+                  </span>{" "}
+                  <span className="text-base text-gray-900 font-bold tracking-[-0.30px] w-auto">
+                    {product.price && product.discount
+                      ? (product.price -
+                          (product.price * product.discount) / 100) *
+                        quantity
+                      : product.price}
+                  </span>
+                  Rwf
                 </p>
                 <button className="text-secondary ">
                   <svg

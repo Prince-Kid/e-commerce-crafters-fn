@@ -30,7 +30,7 @@ const Payment = (data: paymentProps) => {
 
   const validation = async (e: FormEvent) => {
     e.preventDefault();
-    if (!district || !cell || !streetAddress) {
+    if (!district || !cell) {
       setErrorMessage(t("Please fill all the fields"));
     } else {
       setErrorMessage(t(""));
@@ -60,20 +60,32 @@ const Payment = (data: paymentProps) => {
           token: token,
         });
         setLoadingPay(false);
-        window.location.href = paymentRes.data.url;
+
+        // Check if paymentRes and paymentRes.data exist
+        if (paymentRes && paymentRes.data && paymentRes.data.url) {
+          console.log(paymentRes.data.url);
+          window.location.href = paymentRes.data.url; // Redirect to the payment URL
+        } else {
+          console.error(
+            "Payment response data is missing or malformed:",
+            paymentRes
+          );
+          setErrorMessage(t("Something went wrong. Please try again."));
+        }
       }
     } catch (error) {
       console.log(error);
+      setLoadingPay(false);
+      setErrorMessage(t("An error occurred during payment processing."));
     }
   };
-  console.log(streetAddress)
+
   return (
     <div className=" w-1/2  p-10">
-     
       <div className="payment-content bg-white px-[30px] p-[20px]  flex flex-col gap-[10px]">
-      <header className=" text-blackText rounded-t-[5px]">
-        {t("PAYMENT DETAILS")}
-      </header>
+        <header className=" text-blackText rounded-t-[5px]">
+          {t("PAYMENT DETAILS")}
+        </header>
         {errorMessage}
         <form
           onSubmit={validation}
@@ -81,14 +93,13 @@ const Payment = (data: paymentProps) => {
           className=" flex flex-col gap-[20px] w-full "
         >
           <div className="w-[300px]">
-
-          <LocationButton
-            setCell={setCell}
-            setCity={setCity}
-            setDistrict={setDistrict}
-            setStreetAddress={setStreetAddress}
+            <LocationButton
+              setCell={setCell}
+              setCity={setCity}
+              setDistrict={setDistrict}
+              setStreetAddress={setStreetAddress}
             />
-            </div>
+          </div>
           <div className="contacts w-full gap-[10px] grid grid-cols-2 justify-between mb-5">
             <input
               id="district"
@@ -106,14 +117,6 @@ const Payment = (data: paymentProps) => {
               placeholder={t("Sector")}
               disabled={true}
             />
-          <input
-            value={streetAddress}
-            type="text"
-            onChange={(e)=> setStreetAddress(e.target.value)}
-            className="contact street  p-3 w-full rounded-[7px]  border bg-transparent"
-            placeholder={t("Street address")}
-            disabled={true}
-          />
           </div>
 
           <button

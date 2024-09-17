@@ -16,7 +16,7 @@ const HeroSection: React.FC = () => {
     "https://png.pngtree.com/png-vector/20231214/ourmid/pngtree-shoe-product-design-premium-sneakers-3d-png-image_11331792.png",
     "https://purepng.com/public/uploads/large/purepng.com-macbookmacbooknotebookcomputersapple-inmacbook-familyapple-laptops-17015283608871xjab.png",
     "https://www.pngall.com/wp-content/uploads/2016/03/Fruit-Free-Download-PNG.png",
-  ]
+  ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -34,7 +34,6 @@ const HeroSection: React.FC = () => {
   }, [images]);
 
   const { t } = useTranslation();
-
 
   return (
     <section className=" bg-gradient-to-r from-primary to-primaryGradient text-white text-xl px-8 py-[20vh]  md:px-8 lg:px-16 flex flex-col lg:flex-row items-center gap-8 lg:gap-64 font-outfit justify-start items-start">
@@ -67,7 +66,6 @@ const HeroSection: React.FC = () => {
 
       <div className="w-full md:w-1/2 lg:w-1/2 flexb justify-start items-start">
         <div className="w-full max-w-md">
-      
           {images && images.length > 0 && (
             <img
               src={images[currentImageIndex]}

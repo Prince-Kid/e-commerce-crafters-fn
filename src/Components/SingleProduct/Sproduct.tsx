@@ -103,7 +103,7 @@ const Sproduct: React.FC<{ productId: string }> = ({ productId }) => {
       try {
         if (userId) {
           const response = await dispatch(fetchWishlist(userId) as any);
-          console.log("jjjjjjjjik", response);
+
           const isInWishlist = response.payload.wishlist.some(
             (item: any) => item.productId === productId
           );
@@ -239,7 +239,7 @@ const Sproduct: React.FC<{ productId: string }> = ({ productId }) => {
               <img
                 src={selectedImage}
                 alt="Selected product"
-                className="min-w-[300px] max-w-[100%] sm:h-[300px] w-full md:w-[95%] md:h-[350px] h-[160px] object-cover"
+                className="min-w-[300px] max-w-[100%] sm:h-[300px] w-full md:w-[95%] md:h-[350px] h-[160px] object-contain"
               />
             </div>
 
@@ -263,7 +263,7 @@ const Sproduct: React.FC<{ productId: string }> = ({ productId }) => {
               <img
                 src={isWishlist ? heartact : heart}
                 alt="Wishlist"
-                className={`transition-colors duration-300 h-8 w-8 ${
+                className={`transition-colors duration-300 h-8 w-8  ${
                   isLoading ? " cursor-not-allowed" : "cursor-pointer"
                 }}`}
               />
@@ -277,7 +277,7 @@ const Sproduct: React.FC<{ productId: string }> = ({ productId }) => {
                   src={image}
                   alt={`Thumbnail ${index + 1}`}
                   onClick={() => handleImageClick(image)}
-                  className="cursor-pointer w-full md:w-[70%] rounded-md h-[10vh] md:h-[15vh] object-fill"
+                  className="cursor-pointer w-full h-auto rounded-md max-h-[10vh] md:max-h-[15vh] object-contain"
                 />
               ))}
           </div>
